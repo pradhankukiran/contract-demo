@@ -63,10 +63,9 @@ export default function DraftContract() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-12 animate-fade-in">
-        <div className="flex items-center gap-3 mb-3">
-          <Sparkles className="w-8 h-8 text-primary" />
-          <h2 className="text-4xl font-bold text-foreground">Draft New Contract</h2>
-        </div>
+      <div className="mb-3">
+        <h2 className="text-4xl font-bold text-foreground">Draft New Contract</h2>
+      </div>
         <p className="text-lg text-muted-foreground">
           Fill in the details below to generate a professional contract
         </p>
