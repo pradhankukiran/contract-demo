@@ -30,10 +30,10 @@ export const FileUpload = ({ onFileSelect, selectedFile, onClear }: FileUploadPr
 
   if (selectedFile) {
     return (
-      <div className="border-2 border-border rounded-xl p-6 bg-card">
+      <div className="border-2 border-border p-6 bg-card">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-primary-light flex items-center justify-center">
+            <div className="w-12 h-12 bg-primary-light flex items-center justify-center">
               <FileText className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -45,7 +45,7 @@ export const FileUpload = ({ onFileSelect, selectedFile, onClear }: FileUploadPr
           </div>
           <button
             onClick={onClear}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            className="p-2 hover:bg-muted transition-colors"
           >
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
@@ -63,7 +63,7 @@ export const FileUpload = ({ onFileSelect, selectedFile, onClear }: FileUploadPr
       }}
       onDragLeave={() => setIsDragOver(false)}
       className={cn(
-        "border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer",
+        "border-2 border-dashed p-12 text-center transition-all cursor-pointer",
         isDragOver 
           ? "border-primary bg-primary-light" 
           : "border-border hover:border-primary/50 hover:bg-muted/50"
@@ -78,7 +78,7 @@ export const FileUpload = ({ onFileSelect, selectedFile, onClear }: FileUploadPr
       />
       <label htmlFor="file-upload" className="cursor-pointer">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center">
+          <div className="w-16 h-16 bg-primary-light flex items-center justify-center">
             <Upload className="w-8 h-8 text-primary" />
           </div>
           <div>

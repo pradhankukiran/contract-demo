@@ -133,7 +133,7 @@ ${i + 1}. ${issue.title}
         {analysis && (
           <div className="space-y-6 animate-fade-in">
             {/* Overall Risk Score */}
-            <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
+            <div className="bg-card p-6 shadow-lg border border-border">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">Overall Risk Assessment</h3>
@@ -152,20 +152,20 @@ ${i + 1}. ${issue.title}
             </div>
 
             {/* Category Checklist */}
-            <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
+            <div className="bg-card p-6 shadow-lg border border-border">
               <h3 className="text-lg font-semibold text-foreground mb-6">Risk Categories</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {analysis.categories.map((category) => (
                   <div
                     key={category.name}
-                    className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/30 transition-colors hover:bg-muted/50"
+                    className="flex items-center justify-between p-4 border border-border bg-muted/30 transition-colors hover:bg-muted/50"
                   >
                     <div className="flex items-center gap-3">
                       {getCategoryIcon(category.status)}
                       <span className="font-medium text-foreground">{category.name}</span>
                     </div>
                     {category.issues > 0 && (
-                      <span className="text-xs font-semibold px-2 py-1 rounded-full bg-destructive/10 text-destructive">
+                      <span className="text-xs font-semibold px-2 py-1 bg-destructive/10 text-destructive">
                         {category.issues} {category.issues === 1 ? 'issue' : 'issues'}
                       </span>
                     )}
@@ -175,7 +175,7 @@ ${i + 1}. ${issue.title}
             </div>
 
             {/* Detailed Issues */}
-            <div className="bg-card rounded-xl p-6 shadow-lg border border-border">
+            <div className="bg-card p-6 shadow-lg border border-border">
               <h3 className="text-lg font-semibold text-foreground mb-6">
                 Detailed Issues ({analysis.issues.length})
               </h3>
@@ -185,7 +185,7 @@ ${i + 1}. ${issue.title}
                   return (
                     <div
                       key={issue.id}
-                      className="border border-border rounded-lg overflow-hidden transition-all"
+                      className="border border-border overflow-hidden transition-all"
                     >
                       <button
                         onClick={() => toggleIssue(issue.id)}

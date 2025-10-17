@@ -32,7 +32,7 @@ export const RiskBadge = ({ level, className }: RiskBadgeProps) => {
   return (
     <span
       className={cn(
-        'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border',
+        'inline-flex items-center px-3 py-1 text-xs font-semibold border',
         config.className,
         className
       )}

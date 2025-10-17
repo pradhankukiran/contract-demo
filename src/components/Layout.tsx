@@ -20,7 +20,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-primary flex items-center justify-center">
                 <FileText className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
@@ -39,7 +39,7 @@ export const Layout = ({ children }: LayoutProps) => {
                   key={tab.path}
                   to={tab.path}
                   className={`
-                    flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all
+                    flex items-center gap-2 px-4 py-2.5 font-medium transition-all
                     ${isActive 
                       ? 'bg-primary text-primary-foreground shadow-md' 
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
