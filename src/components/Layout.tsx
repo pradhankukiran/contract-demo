@@ -22,7 +22,7 @@ export const Layout = ({
         <div className="container mx-auto px-6 py-6">
           
 
-          <nav className="flex gap-2">
+          <nav className="flex gap-2 justify-center">
             {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = location.pathname === tab.path;

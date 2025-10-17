@@ -71,139 +71,125 @@ export default function DraftContract() {
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-5 gap-8">
-        {/* Form Section - Takes 2 columns */}
-        <div className="lg:col-span-2 animate-slide-up">
-          <div className="bg-card p-8 shadow-xl border-l-4 border-primary">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xs uppercase tracking-wider font-semibold text-muted-foreground mb-6">
-                  Contract Information
-                </h3>
-                
-                <div className="space-y-5">
-                  <SelectField
-                    label="Contract Type"
-                    options={contractTemplates}
-                    value={formData.contractType}
-                    onChange={(e) => handleChange('contractType', e.target.value)}
-                  />
+      {/* Form Section - Full Width */}
+      <div className="animate-slide-up">
+        <div className="bg-card p-8 shadow-xl border-l-4 border-primary max-w-4xl mx-auto">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-muted-foreground mb-6">
+                Contract Information
+              </h3>
 
-                  <InputField
-                    label="Client Name *"
-                    placeholder="Acme Corporation"
-                    value={formData.clientName}
-                    onChange={(e) => handleChange('clientName', e.target.value)}
-                  />
+              <div className="grid md:grid-cols-2 gap-5">
+                <SelectField
+                  label="Contract Type"
+                  options={contractTemplates}
+                  value={formData.contractType}
+                  onChange={(e) => handleChange('contractType', e.target.value)}
+                />
 
-                  <InputField
-                    label="Industry"
-                    placeholder="Technology, Healthcare, Finance..."
-                    value={formData.industry}
-                    onChange={(e) => handleChange('industry', e.target.value)}
-                  />
-                </div>
-              </div>
+                <InputField
+                  label="Client Name *"
+                  placeholder="Acme Corporation"
+                  value={formData.clientName}
+                  onChange={(e) => handleChange('clientName', e.target.value)}
+                />
 
-              <div className="pt-6 border-t border-border">
-                <h3 className="text-xs uppercase tracking-wider font-semibold text-muted-foreground mb-6">
-                  Party Details
-                </h3>
-                
-                <div className="space-y-5">
-                  <InputField
-                    label="First Party (Provider) *"
-                    placeholder="Your Company Name"
-                    value={formData.firstParty}
-                    onChange={(e) => handleChange('firstParty', e.target.value)}
-                  />
-
-                  <InputField
-                    label="Second Party (Client) *"
-                    placeholder="Client Company Name"
-                    value={formData.secondParty}
-                    onChange={(e) => handleChange('secondParty', e.target.value)}
-                  />
-
-                  <InputField
-                    label="Term Duration"
-                    placeholder="12 months, 2 years, etc."
-                    value={formData.termDuration}
-                    onChange={(e) => handleChange('termDuration', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-border">
-                <TextareaField
-                  label="Business Purpose"
-                  placeholder="Describe the purpose and scope of this agreement..."
-                  value={formData.businessPurpose}
-                  onChange={(e) => handleChange('businessPurpose', e.target.value)}
-                  rows={5}
+                <InputField
+                  label="Industry"
+                  placeholder="Technology, Healthcare, Finance..."
+                  value={formData.industry}
+                  onChange={(e) => handleChange('industry', e.target.value)}
                 />
               </div>
+            </div>
 
-              <Button
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                className="w-full h-14 text-base font-semibold mt-8"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Generating Contract...
-                  </>
-                ) : (
-                  <>
-                    <FileText className="mr-2 h-5 w-5" />
-                    Generate Contract
-                  </>
-                )}
-              </Button>
+            <div className="pt-6 border-t border-border">
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-muted-foreground mb-6">
+                Party Details
+              </h3>
+
+              <div className="grid md:grid-cols-2 gap-5">
+                <InputField
+                  label="First Party (Provider) *"
+                  placeholder="Your Company Name"
+                  value={formData.firstParty}
+                  onChange={(e) => handleChange('firstParty', e.target.value)}
+                />
+
+                <InputField
+                  label="Second Party (Client) *"
+                  placeholder="Client Company Name"
+                  value={formData.secondParty}
+                  onChange={(e) => handleChange('secondParty', e.target.value)}
+                />
+
+                <InputField
+                  label="Term Duration"
+                  placeholder="12 months, 2 years, etc."
+                  value={formData.termDuration}
+                  onChange={(e) => handleChange('termDuration', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-border">
+              <TextareaField
+                label="Business Purpose"
+                placeholder="Describe the purpose and scope of this agreement..."
+                value={formData.businessPurpose}
+                onChange={(e) => handleChange('businessPurpose', e.target.value)}
+                rows={5}
+              />
+            </div>
+
+            <Button
+              onClick={handleGenerate}
+              disabled={isGenerating}
+              className="w-full h-14 text-base font-semibold mt-8"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Generating Contract...
+                </>
+              ) : (
+                <>
+                  <FileText className="mr-2 h-5 w-5" />
+                  Generate Contract
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Section - Only shown after generation */}
+      {generatedContract && (
+        <div className="mt-12 animate-slide-up">
+          <div className="bg-card shadow-xl border border-border overflow-hidden">
+            <div className="p-6 border-b border-border bg-muted/30">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">Generated Contract</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Based on: Professional Services Template
+                  </p>
+                </div>
+                <Button onClick={handleDownload} variant="outline" className="h-10">
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </div>
+            </div>
+            <div className="p-8 overflow-y-auto max-h-[600px]">
+              <pre className="text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed">
+                {generatedContract}
+              </pre>
             </div>
           </div>
         </div>
-
-        {/* Results Section - Takes 3 columns */}
-        <div className="lg:col-span-3 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          {generatedContract ? (
-            <div className="bg-card shadow-xl border border-border overflow-hidden h-full flex flex-col">
-              <div className="p-6 border-b border-border bg-muted/30">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">Generated Contract</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Based on: Professional Services Template
-                    </p>
-                  </div>
-                  <Button onClick={handleDownload} variant="outline" className="h-10">
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </Button>
-                </div>
-              </div>
-              <div className="p-8 overflow-y-auto flex-1">
-                <pre className="text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed">
-                  {generatedContract}
-                </pre>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-card p-16 text-center border-2 border-dashed border-border h-full flex flex-col items-center justify-center">
-              <div className="w-20 h-20 mx-auto mb-6 bg-muted flex items-center justify-center">
-                <FileText className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">
-                No Contract Generated Yet
-              </h3>
-              <p className="text-muted-foreground max-w-md">
-                Fill in the form on the left and click "Generate Contract" to see your professionally drafted document appear here
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
