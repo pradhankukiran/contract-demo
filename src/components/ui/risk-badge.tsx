@@ -10,19 +10,19 @@ interface RiskBadgeProps {
 const riskConfig = {
   critical: {
     label: 'Critical Risk',
-    className: 'bg-critical/10 text-critical border-critical/20',
+    className: 'bg-critical/10 text-critical border-critical',
   },
   high: {
     label: 'High Risk',
-    className: 'bg-high/10 text-high border-high/20',
+    className: 'bg-high/10 text-high border-high',
   },
   medium: {
     label: 'Medium Risk',
-    className: 'bg-medium/10 text-medium border-medium/20',
+    className: 'bg-medium/10 text-medium border-medium',
   },
   low: {
     label: 'Low Risk',
-    className: 'bg-low/10 text-low border-low/20',
+    className: 'bg-low/10 text-low border-low',
   },
 };
 
@@ -32,7 +32,7 @@ export const RiskBadge = ({ level, className }: RiskBadgeProps) => {
   return (
     <span
       className={cn(
-        'inline-flex items-center px-3 py-1 text-xs font-semibold border',
+        'inline-flex items-center px-3 py-1 text-xs font-semibold border rounded-full',
         config.className,
         className
       )}

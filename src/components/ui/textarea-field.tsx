@@ -18,10 +18,10 @@ export const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>
         <textarea
           ref={ref}
           className={cn(
-            "flex min-h-[120px] w-full border border-input bg-background px-4 py-3 text-sm",
+            "flex min-h-[120px] w-full rounded-lg border border-input bg-background px-4 py-3 text-sm",
             "ring-offset-background",
             "placeholder:text-muted-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             "disabled:cursor-not-allowed disabled:opacity-50",
             "transition-all resize-y",
             error && "border-destructive focus-visible:ring-destructive",

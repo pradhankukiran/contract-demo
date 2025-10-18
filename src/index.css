@@ -45,22 +45,20 @@ All colors MUST be HSL.
     --input: 215 20% 88%;
     --ring: 223 76% 39%;
 
-    --radius: 0rem;
-    
+    --radius: 0.5rem;
+
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(223 76% 39%), hsl(223 76% 50%));
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(215 25% 98%));
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(215 25% 27% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(215 25% 27% / 0.1), 0 2px 4px -2px hsl(215 25% 27% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(215 25% 27% / 0.1), 0 4px 6px -4px hsl(215 25% 27% / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(215 25% 27% / 0.1), 0 8px 10px -6px hsl(215 25% 27% / 0.1);
-    
+
+    /* Shadows - Premium depth hierarchy */
+    --shadow-sm: 0 1px 3px 0 hsl(215 25% 27% / 0.08);
+    --shadow-md: 0 4px 12px -2px hsl(215 25% 27% / 0.12);
+    --shadow-lg: 0 12px 24px -4px hsl(215 25% 27% / 0.16);
+    --shadow-xl: 0 24px 48px -8px hsl(215 25% 27% / 0.20);
+
     /* Transitions */
     --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-    --radius: 0rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -134,4 +132,116 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Contract Editor Styles */
+.contract-editor {
+  @apply w-full;
+}
+
+.contract-editor .ProseMirror {
+  @apply text-foreground;
+}
+
+.contract-editor .ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-muted-foreground;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.contract-editor .ProseMirror h1 {
+  @apply text-2xl font-bold mb-4 mt-6 text-foreground;
+}
+
+.contract-editor .ProseMirror h2 {
+  @apply text-xl font-semibold mb-3 mt-5 text-foreground;
+}
+
+.contract-editor .ProseMirror h3 {
+  @apply text-lg font-semibold mb-2 mt-4 text-foreground;
+}
+
+.contract-editor .ProseMirror p {
+  @apply mb-4 leading-relaxed text-foreground;
+}
+
+.contract-editor .ProseMirror ul,
+.contract-editor .ProseMirror ol {
+  @apply mb-4 ml-6;
+}
+
+.contract-editor .ProseMirror ul {
+  @apply list-disc;
+}
+
+.contract-editor .ProseMirror ol {
+  @apply list-decimal;
+}
+
+.contract-editor .ProseMirror li {
+  @apply mb-2;
+}
+
+.contract-editor .ProseMirror blockquote {
+  @apply border-l-4 border-primary pl-4 italic my-4 text-muted-foreground;
+}
+
+.contract-editor .ProseMirror hr {
+  @apply my-6 border-border;
+}
+
+.contract-editor .ProseMirror strong {
+  @apply font-semibold;
+}
+
+.contract-editor .ProseMirror em {
+  @apply italic;
+}
+
+.contract-editor .ProseMirror u {
+  @apply underline;
+}
+
+.contract-editor .ProseMirror mark {
+  @apply bg-yellow-200 dark:bg-yellow-900 px-1 rounded;
+}
+
+.contract-editor .ProseMirror code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.contract-editor .ProseMirror pre {
+  @apply bg-muted p-4 rounded-lg my-4 overflow-x-auto;
+}
+
+.contract-editor .ProseMirror pre code {
+  @apply bg-transparent p-0;
+}
+
+/* Focus styles */
+.contract-editor .ProseMirror:focus {
+  @apply outline-none;
+}
+
+/* Risk Highlighting */
+.contract-editor .risk-highlight {
+  @apply px-0.5 rounded transition-colors;
+}
+
+.contract-editor .risk-critical {
+  @apply bg-destructive/20 border-l-2 border-destructive;
+}
+
+.contract-editor .risk-high {
+  @apply bg-high/20 border-l-2 border-high;
+}
+
+.contract-editor .risk-medium {
+  @apply bg-medium/20 border-l-2 border-medium;
+}
+
+.contract-editor .risk-low {
+  @apply bg-low/20 border-l-2 border-low;
 }

@@ -23,6 +23,7 @@ import { TextareaField } from '@/components/ui/textarea-field';
 import { Badge } from '@/components/ui/badge';
 import { RiskBadge, type RiskLevel } from '@/components/ui/risk-badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { ContractEditor } from '@/components/ContractEditor';
 import { cn } from '@/lib/utils';
 import {
   contractTemplates,
@@ -51,47 +52,47 @@ const riskStatusConfig: Record<
 > = {
   pass: {
     label: 'Ready',
-    className: 'border-emerald-200/70 bg-emerald-500/15 text-emerald-700',
+    className: 'border-emerald-200 bg-emerald-500/10 text-emerald-700',
     icon: CheckCircle2,
   },
   warning: {
     label: 'Needs review',
-    className: 'border-amber-300/70 bg-amber-500/15 text-amber-800',
+    className: 'border-amber-300 bg-amber-500/10 text-amber-800',
     icon: AlertTriangle,
   },
   action: {
     label: 'Missing',
-    className: 'border-rose-300/70 bg-rose-500/15 text-rose-700',
+    className: 'border-rose-300 bg-rose-500/10 text-rose-700',
     icon: AlertCircle,
   },
 };
 
 const guardrailTone: Record<RiskStatus, string> = {
-  pass: 'border-emerald-200/70 bg-emerald-500/8',
-  warning: 'border-amber-300/70 bg-amber-500/8',
-  action: 'border-rose-300/70 bg-rose-500/8',
+  pass: 'border-emerald-200 bg-emerald-50',
+  warning: 'border-amber-300 bg-amber-50',
+  action: 'border-rose-300 bg-rose-50',
 };
 
 const playbookStatusConfig: Record<string, { label: string; className: string }> = {
   'in-progress': {
     label: 'In progress',
-    className: 'border-primary/40 bg-primary/10 text-primary',
+    className: 'border-primary bg-primary/10 text-primary',
   },
   pending: {
     label: 'Pending input',
-    className: 'border-amber-400/60 bg-amber-500/10 text-amber-800',
+    className: 'border-amber-400 bg-amber-500/10 text-amber-800',
   },
   upcoming: {
     label: 'Queued',
-    className: 'border-border/60 bg-muted/40 text-muted-foreground',
+    className: 'border-border bg-muted/50 text-muted-foreground',
   },
 };
 
 const clauseAccent: Record<RiskLevel, string> = {
-  critical: 'border-l-4 border-destructive/70 bg-destructive/10',
-  high: 'border-l-4 border-high/70 bg-high/10',
-  medium: 'border-l-4 border-medium/60 bg-medium/10',
-  low: 'border-l-4 border-low/50 bg-low/10',
+  critical: 'border-l-4 border-destructive',
+  high: 'border-l-4 border-high',
+  medium: 'border-l-4 border-medium',
+  low: 'border-l-4 border-low',
 };
 
 export default function DraftContract() {
@@ -135,7 +136,7 @@ export default function DraftContract() {
     setInsertedClauses(new Set());
 
     setTimeout(() => {
-      const contract = sampleContract
+      const plainContract = sampleContract
         .replace(/\[DATE\]/g, new Date().toLocaleDateString())
         .replace(/\[First Party Name\]/g, formData.firstParty)
         .replace(/\[Second Party Name\]/g, formData.secondParty)
@@ -143,7 +144,23 @@ export default function DraftContract() {
         .replace(/\[business purpose\]/g, formData.businessPurpose || 'professional services')
         .replace(/\[Term Duration\]/g, formData.termDuration || '12 months');
 
-      setGeneratedContract(contract);
+      // Convert plain text to HTML
+      const htmlContract = plainContract
+        .split('\n\n')
+        .map(paragraph => {
+          const trimmed = paragraph.trim();
+          if (!trimmed) return '';
+
+          // Check if it's a title (all caps or starts with number)
+          if (trimmed === trimmed.toUpperCase() && trimmed.length < 100) {
+            return `<h2>${trimmed}</h2>`;
+          }
+
+          return `<p>${trimmed}</p>`;
+        })
+        .join('');
+
+      setGeneratedContract(htmlContract);
       setIsGenerating(false);
       toast.success('Contract generated successfully.');
     }, 2000);
@@ -156,9 +173,42 @@ export default function DraftContract() {
     }
 
     const filename = formData.clientName
-      ? `${formData.clientName.replace(/\s+/g, '_')}_contract.txt`
-      : 'contract_draft.txt';
-    const blob = new Blob([generatedContract], { type: 'text/plain' });
+      ? `${formData.clientName.replace(/\s+/g, '_')}_contract.html`
+      : 'contract_draft.html';
+
+    // Create a styled HTML document
+    const styledHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${formData.clientName || 'Contract'}</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      max-width: 8.5in;
+      margin: 1in auto;
+      padding: 0;
+      line-height: 1.6;
+      color: #000;
+    }
+    h1 { font-size: 18pt; font-weight: bold; margin-top: 24pt; margin-bottom: 12pt; }
+    h2 { font-size: 16pt; font-weight: bold; margin-top: 18pt; margin-bottom: 10pt; }
+    h3 { font-size: 14pt; font-weight: bold; margin-top: 14pt; margin-bottom: 8pt; }
+    p { margin-bottom: 12pt; text-align: justify; }
+    ul, ol { margin-left: 1.5in; margin-bottom: 12pt; }
+    li { margin-bottom: 6pt; }
+    strong { font-weight: bold; }
+    em { font-style: italic; }
+    u { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  ${generatedContract}
+</body>
+</html>`;
+
+    const blob = new Blob([styledHTML], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -175,9 +225,12 @@ export default function DraftContract() {
     }
 
     setGeneratedContract((prev) => {
-      const header = `\n\n${title.toUpperCase()}\n`;
-      const cleaned = prev.includes(title.toUpperCase()) ? prev : `${prev.trimEnd()}${header}${text}`;
-      return cleaned;
+      const clauseHTML = `<h2>${title.toUpperCase()}</h2><p>${text}</p>`;
+      // Check if clause already exists
+      if (prev.includes(title.toUpperCase())) {
+        return prev;
+      }
+      return prev + clauseHTML;
     });
 
     setInsertedClauses((prev) => {
@@ -196,7 +249,24 @@ export default function DraftContract() {
       ...prev,
       ...template.formDefaults,
     }));
-    setGeneratedContract(template.contract);
+
+    // Convert plain text contract to HTML
+    const htmlContract = template.contract
+      .split('\n\n')
+      .map(paragraph => {
+        const trimmed = paragraph.trim();
+        if (!trimmed) return '';
+
+        // Check if it's a title (all caps or starts with number)
+        if (trimmed === trimmed.toUpperCase() && trimmed.length < 100) {
+          return `<h2>${trimmed}</h2>`;
+        }
+
+        return `<p>${trimmed}</p>`;
+      })
+      .join('');
+
+    setGeneratedContract(htmlContract);
     setInsertedClauses(new Set());
     toast.success(`${template.name} loaded into the draft preview.`);
   };
@@ -267,7 +337,7 @@ export default function DraftContract() {
 
   return (
     <div className="mx-auto max-w-[1400px] space-y-12">
-      <section className="relative overflow-hidden rounded-lg border border-border/60 bg-gradient-to-br from-card via-primary/10 to-background p-10 text-foreground shadow-[0_35px_120px_-40px_rgba(15,23,42,0.55)]">
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-card via-primary/5 to-background p-10 text-foreground shadow-xl">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-24 right-16 h-64 w-64 rounded-full bg-primary/30 blur-[140px]" />
           <div className="absolute -bottom-32 left-10 h-72 w-72 rounded-full bg-primary/20 blur-[160px]" />
@@ -310,7 +380,7 @@ export default function DraftContract() {
               return (
                 <div
                   key={highlight.id}
-                  className="flex flex-col gap-2 rounded-lg border border-foreground/10 bg-background/70 p-5 text-left shadow-lg shadow-foreground/5 backdrop-blur"
+                  className="flex flex-col gap-2 rounded-lg bg-background/90 p-5 text-left shadow-lg backdrop-blur-sm"
                 >
                   <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-primary">
                     <Icon className="h-4 w-4" />
@@ -327,8 +397,8 @@ export default function DraftContract() {
 
       <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,1.85fr)_minmax(0,1fr)]">
         <div className="space-y-8">
-          <div className="rounded-lg border border-border/60 bg-card/80 p-8 shadow-2xl backdrop-blur supports-[backdrop-filter]:bg-card/65">
-            <div className="flex flex-col gap-2 border-b border-border/40 pb-6">
+          <div className="rounded-xl bg-card p-8 shadow-lg">
+            <div className="flex flex-col gap-2 border-b border-border pb-6">
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Guided intake
               </span>
@@ -350,7 +420,7 @@ export default function DraftContract() {
             >
               <AccordionItem
                 value="overview"
-                className="rounded-lg border-none bg-background/60 px-4 shadow-sm"
+                className="rounded-lg border-none bg-muted/50 px-4 overflow-visible"
               >
                 <AccordionTrigger className="text-left text-base font-semibold leading-tight">
                   <div className="flex flex-col text-left">
@@ -361,7 +431,7 @@ export default function DraftContract() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-0">
-                  <div className="grid gap-5 border-t border-border/30 pt-6 md:grid-cols-2">
+                  <div className="grid gap-5 border-t border-border/30 pt-6 px-2 md:grid-cols-2">
                     <SelectField
                       label="Contract Type"
                       options={contractTemplates}
@@ -392,7 +462,7 @@ export default function DraftContract() {
 
               <AccordionItem
                 value="parties"
-                className="rounded-lg border-none bg-background/60 px-4 shadow-sm"
+                className="rounded-lg border-none bg-muted/50 px-4 overflow-visible"
               >
                 <AccordionTrigger className="text-left text-base font-semibold leading-tight">
                   <div className="flex flex-col text-left">
@@ -403,7 +473,7 @@ export default function DraftContract() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-0">
-                  <div className="grid gap-5 border-t border-border/30 pt-6 md:grid-cols-2">
+                  <div className="grid gap-5 border-t border-border/30 pt-6 px-2 md:grid-cols-2">
                     <InputField
                       label="First Party (Provider) *"
                       placeholder="Your Company Name"
@@ -428,7 +498,7 @@ export default function DraftContract() {
 
               <AccordionItem
                 value="strategy"
-                className="rounded-lg border-none bg-background/60 px-4 shadow-sm"
+                className="rounded-lg border-none bg-muted/50 px-4 overflow-visible"
               >
                 <AccordionTrigger className="text-left text-base font-semibold leading-tight">
                   <div className="flex flex-col text-left">
@@ -439,7 +509,7 @@ export default function DraftContract() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-0">
-                  <div className="grid gap-5 border-t border-border/30 pt-6 md:grid-cols-2">
+                  <div className="grid gap-5 border-t border-border/30 pt-6 px-2 md:grid-cols-2">
                     <SelectField
                       label="Risk Profile"
                       options={riskProfiles}
@@ -493,8 +563,8 @@ export default function DraftContract() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border/60 bg-card/80 p-8 shadow-2xl backdrop-blur supports-[backdrop-filter]:bg-card/65">
-            <div className="flex items-center justify-between gap-3 border-b border-border/40 pb-6">
+          <div className="rounded-xl bg-card p-8 shadow-lg">
+            <div className="flex items-center justify-between gap-3 border-b border-border pb-6">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Prebuilt agreements
@@ -513,7 +583,7 @@ export default function DraftContract() {
               {prebuiltDrafts.map((template) => (
                 <div
                   key={template.id}
-                  className="flex flex-col gap-4 rounded-lg border border-border/60 bg-muted/25 p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                  className="flex flex-col gap-4 rounded-lg bg-muted/50 p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -558,8 +628,8 @@ export default function DraftContract() {
 
           {generatedContract && (
             <>
-              <div className="overflow-hidden rounded-lg border border-border/60 bg-card/85 shadow-2xl">
-                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/40 bg-muted/40 px-8 py-6">
+              <div className="overflow-hidden rounded-xl bg-card shadow-lg">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-muted/50 px-8 py-6">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       Generated contract
@@ -576,14 +646,15 @@ export default function DraftContract() {
                     Download
                   </Button>
                 </div>
-                <div className="max-h-[580px] overflow-y-auto px-8 py-6">
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-foreground">
-                    {generatedContract}
-                  </pre>
-                </div>
+                <ContractEditor
+                  content={generatedContract}
+                  onChange={setGeneratedContract}
+                  editable={true}
+                  placeholder="Your contract will appear here..."
+                />
               </div>
 
-              <div className="rounded-lg border border-border/60 bg-card/80 p-8 shadow-2xl backdrop-blur supports-[backdrop-filter]:bg-card/65">
+              <div className="rounded-xl bg-card p-8 shadow-lg">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">AI Draft Insights</h3>
@@ -602,7 +673,7 @@ export default function DraftContract() {
                   {draftInsights.obligations.map((obligation) => (
                     <div
                       key={obligation.party}
-                      className="rounded-lg border border-border/60 bg-muted/30 p-5 shadow-sm"
+                      className="rounded-lg bg-muted/50 p-5"
                     >
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {obligation.party}
@@ -623,7 +694,7 @@ export default function DraftContract() {
                   {draftInsights.negotiationFlags.map((flag) => (
                     <div
                       key={flag.id}
-                      className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/30 p-4"
+                      className="flex items-start gap-3 rounded-lg bg-muted/50 p-4"
                     >
                       <RiskBadge level={flag.level as RiskLevel} className="shrink-0" />
                       <p className="text-sm leading-relaxed text-muted-foreground">{flag.text}</p>
@@ -636,7 +707,7 @@ export default function DraftContract() {
         </div>
 
         <aside className="space-y-6 xl:sticky xl:top-24">
-          <div className="rounded-lg border border-border/60 bg-card/75 p-6 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <div className="rounded-xl bg-card p-6 shadow-lg">
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -653,21 +724,21 @@ export default function DraftContract() {
             </div>
 
             <dl className="mt-6 grid grid-cols-1 gap-4 text-sm text-muted-foreground">
-              <div className="flex flex-col rounded-lg border border-border/40 bg-muted/20 p-4">
+              <div className="flex flex-col rounded-lg bg-muted/50 p-4">
                 <dt className="text-xs uppercase tracking-widest">Contract type</dt>
                 <dd className="mt-1 text-foreground">
                   {selectedTemplate?.label ?? 'Service Agreement'}
                 </dd>
               </div>
-              <div className="flex flex-col rounded-lg border border-border/40 bg-muted/20 p-4">
+              <div className="flex flex-col rounded-lg bg-muted/50 p-4">
                 <dt className="text-xs uppercase tracking-widest">Term</dt>
                 <dd className="mt-1 text-foreground">{formData.termDuration || 'Not set'}</dd>
               </div>
-              <div className="flex flex-col rounded-lg border border-border/40 bg-muted/20 p-4">
+              <div className="flex flex-col rounded-lg bg-muted/50 p-4">
                 <dt className="text-xs uppercase tracking-widest">Governing law</dt>
                 <dd className="mt-1 text-foreground">{formData.governingLaw || 'Not set'}</dd>
               </div>
-              <div className="flex flex-col rounded-lg border border-border/40 bg-muted/20 p-4">
+              <div className="flex flex-col rounded-lg bg-muted/50 p-4">
                 <dt className="text-xs uppercase tracking-widest">Risk profile</dt>
                 <dd className="mt-1 text-foreground">
                   {selectedRiskProfile?.label ?? 'Standard · Follow playbook'}
@@ -676,7 +747,7 @@ export default function DraftContract() {
             </dl>
           </div>
 
-          <div className="rounded-lg border border-border/60 bg-card/75 p-6 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <div className="rounded-xl bg-card p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -716,7 +787,7 @@ export default function DraftContract() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border/60 bg-card/75 p-6 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <div className="rounded-xl bg-card p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -737,7 +808,7 @@ export default function DraftContract() {
                       <span className="h-3 w-3 rounded-full bg-primary" />
                       {!isLast && <span className="mt-1 flex-1 w-px bg-border" />}
                     </div>
-                    <div className="flex-1 rounded-lg border border-border/50 bg-muted/25 p-4 shadow-sm">
+                    <div className="flex-1 rounded-lg bg-muted/50 p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div>
                           <p className="text-sm font-semibold text-foreground">{step.title}</p>
@@ -766,7 +837,7 @@ export default function DraftContract() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border/60 bg-card/75 p-6 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <div className="rounded-xl bg-card p-6 shadow-lg">
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -785,7 +856,7 @@ export default function DraftContract() {
                 <div
                   key={clause.id}
                   className={cn(
-                    'rounded-lg border border-border/60 bg-muted/25 p-5 transition-all hover:-translate-y-0.5 hover:shadow-lg',
+                    'rounded-lg bg-muted/50 p-5 transition-all hover:-translate-y-1 hover:shadow-md',
                     clauseAccent[clause.riskLevel as RiskLevel],
                   )}
                 >
@@ -807,7 +878,7 @@ export default function DraftContract() {
                     ))}
                   </div>
 
-                  <div className="mt-3 rounded-lg border border-border/50 bg-background/60 p-3 text-xs leading-relaxed text-muted-foreground">
+                  <div className="mt-3 rounded-lg bg-background/50 p-3 text-xs leading-relaxed text-muted-foreground">
                     <span className="font-semibold text-foreground">Fallback:</span> {clause.fallbackText}
                   </div>
 

@@ -82,7 +82,7 @@ const workflowStatusConfig: Record<
   'in-progress': {
     label: 'In progress',
     dotClass: 'bg-primary',
-    badgeClass: 'bg-primary/10 text-primary border-primary/20',
+    badgeClass: 'bg-primary/10 text-primary border-primary',
   },
   blocked: {
     label: 'Blocked',
@@ -97,7 +97,7 @@ const taskPriorityConfig: Record<
 > = {
   high: {
     label: 'High',
-    className: 'bg-destructive/10 text-destructive border-destructive/20',
+    className: 'bg-destructive/10 text-destructive border-destructive',
   },
   medium: {
     label: 'Medium',
@@ -116,7 +116,7 @@ const taskStatusConfig: Record<TaskStatus, { label: string; className: string }>
   },
   'in-progress': {
     label: 'In progress',
-    className: 'bg-primary/10 text-primary border-primary/20',
+    className: 'bg-primary/10 text-primary border-primary',
   },
   blocked: {
     label: 'Blocked',
@@ -125,10 +125,10 @@ const taskStatusConfig: Record<TaskStatus, { label: string; className: string }>
 };
 
 const remediationStatusMap: Record<string, string> = {
-  critical: 'border-destructive/30 bg-destructive/10',
-  high: 'border-high/40 bg-high/10',
-  medium: 'border-medium/40 bg-medium/10',
-  low: 'border-low/40 bg-low/10',
+  critical: 'border-l-4 border-destructive',
+  high: 'border-l-4 border-high',
+  medium: 'border-l-4 border-medium',
+  low: 'border-l-4 border-low',
 };
 
 const executionStatusConfig: Record<
@@ -141,7 +141,7 @@ const executionStatusConfig: Record<
   },
   'in-progress': {
     label: 'In progress',
-    className: 'bg-primary/10 text-primary border-primary/20',
+    className: 'bg-primary/10 text-primary border-primary',
   },
   blocked: {
     label: 'Blocked',
@@ -285,7 +285,7 @@ ${i + 1}. ${issue.title}
 
   return (
     <div className="mx-auto max-w-[1320px] space-y-10">
-      <section className="relative overflow-hidden rounded-lg border border-border/60 bg-gradient-to-br from-card via-primary/10 to-background px-8 py-10 text-foreground shadow-[0_35px_120px_-40px_rgba(15,23,42,0.55)]">
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-card via-primary/5 to-background px-8 py-10 text-foreground shadow-xl">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-24 left-14 h-64 w-64 rounded-full bg-primary/30 blur-[140px]" />
           <div className="absolute -bottom-28 right-12 h-72 w-72 rounded-full bg-primary/20 blur-[160px]" />
@@ -354,7 +354,7 @@ ${i + 1}. ${issue.title}
               ].map((highlight) => (
                 <div
                   key={highlight.id}
-                  className="flex flex-col gap-2 rounded-lg border border-foreground/10 bg-background/70 p-5 text-left shadow-lg shadow-foreground/5 backdrop-blur"
+                  className="flex flex-col gap-2 rounded-lg bg-background/90 p-5 text-left shadow-lg backdrop-blur-sm"
                 >
                   <div className="text-xs uppercase tracking-wide text-primary">{highlight.label}</div>
                   <span className="text-2xl font-semibold text-foreground">{highlight.value}</span>
@@ -404,7 +404,7 @@ ${i + 1}. ${issue.title}
         {analysis && (
           <div className="space-y-6 animate-fade-in">
             <div className="grid gap-6 xl:grid-cols-2">
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -426,7 +426,7 @@ ${i + 1}. ${issue.title}
                 </Button>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -513,7 +513,7 @@ ${i + 1}. ${issue.title}
                       <RiskBadge level={suggestion.severity as RiskLevel} />
                     </div>
                     <div className="mt-4 grid gap-4 md:grid-cols-2">
-                      <div className="rounded-lg border border-border/60 bg-muted/20 p-4">
+                      <div className="rounded-lg bg-muted/50 p-4">
                         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                           Counterparty text
                         </p>
@@ -628,7 +628,7 @@ ${i + 1}. ${issue.title}
             </div>
 
             <div className="grid gap-6 xl:grid-cols-2">
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -641,12 +641,12 @@ ${i + 1}. ${issue.title}
                   <History className="w-5 h-5 text-muted-foreground" />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-lg border border-border/60 bg-muted/20 p-4">
+                  <div className="rounded-lg bg-muted/50 p-4">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">Deals closed</p>
                     <p className="text-2xl font-semibold text-foreground">{counterpartyIntel.previousDeals}</p>
                     <p className="text-xs text-muted-foreground mt-1">with this counterparty</p>
                   </div>
-                  <div className="rounded-lg border border-border/60 bg-muted/20 p-4">
+                  <div className="rounded-lg bg-muted/50 p-4">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">Median cycle</p>
                     <p className="text-2xl font-semibold text-foreground">{counterpartyIntel.medianCloseTime}</p>
                     <p className="text-xs text-muted-foreground mt-1">send to signature</p>
@@ -656,7 +656,7 @@ ${i + 1}. ${issue.title}
                   {counterpartyIntel.clausesFrequentlyContested.map((item) => (
                     <div
                       key={item.clause}
-                      className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/20 p-3"
+                      className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                     >
                       <span className="text-sm font-medium text-foreground">{item.clause}</span>
                       <span className="text-xs font-semibold text-muted-foreground">{item.successRate} success</span>
@@ -668,7 +668,7 @@ ${i + 1}. ${issue.title}
                 </p>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <h3 className="text-lg font-semibold text-foreground mb-6">Risk Categories</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {analysis.categories.map((category) => (
@@ -690,7 +690,7 @@ ${i + 1}. ${issue.title}
                 </div>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Risk Score Trend</h3>
@@ -718,7 +718,7 @@ ${i + 1}. ${issue.title}
                 </div>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -863,7 +863,7 @@ ${i + 1}. ${issue.title}
             </div>
 
             <div className="grid gap-6 xl:grid-cols-2">
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -914,7 +914,7 @@ ${i + 1}. ${issue.title}
                 </div>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -964,7 +964,7 @@ ${i + 1}. ${issue.title}
             </div>
 
             <div className="grid gap-6 xl:grid-cols-2">
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -980,7 +980,7 @@ ${i + 1}. ${issue.title}
                   {reviewerRecommendations.map((reviewer) => (
                     <div
                       key={reviewer.id}
-                      className="rounded-lg border border-border/60 bg-muted/25 p-4"
+                      className="rounded-lg bg-muted/50 p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div>
@@ -1013,7 +1013,7 @@ ${i + 1}. ${issue.title}
                 </div>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -1025,7 +1025,7 @@ ${i + 1}. ${issue.title}
                   </div>
                   <Shield className="w-5 h-5 text-muted-foreground" />
                 </div>
-                <div className="rounded-lg border border-border/60 bg-muted/25 p-5">
+                <div className="rounded-lg bg-muted/50 p-5">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">Alignment</p>
                   <div className="mt-2 text-3xl font-semibold text-foreground">
                     {playbookCompliance.alignment}%
@@ -1044,7 +1044,7 @@ ${i + 1}. ${issue.title}
                   {playbookCompliance.deviations.map((deviation) => (
                     <div
                       key={deviation.id}
-                      className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/20 p-3"
+                      className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                     >
                       <div>
                         <p className="text-sm font-semibold text-foreground">{deviation.title}</p>
@@ -1058,7 +1058,7 @@ ${i + 1}. ${issue.title}
             </div>
 
             <div className="grid gap-6 xl:grid-cols-2">
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -1074,7 +1074,7 @@ ${i + 1}. ${issue.title}
                   {executionChecklist.map((item) => {
                     const status = executionStatusConfig[item.status as ChecklistState];
                     return (
-                      <div key={item.id} className="rounded-lg border border-border/60 bg-muted/20 p-4">
+                      <div key={item.id} className="rounded-lg bg-muted/50 p-4">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <p className="text-sm font-semibold text-foreground">{item.item}</p>
                           <Badge variant="outline" className={`border ${status.className}`}>
@@ -1088,7 +1088,7 @@ ${i + 1}. ${issue.title}
                 </div>
               </div>
 
-              <div className="bg-card p-6 shadow-lg border border-border">
+              <div className="bg-card p-6 shadow-lg rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
@@ -1102,7 +1102,7 @@ ${i + 1}. ${issue.title}
                 </div>
                 <div className="space-y-4">
                   {auditExports.map((exportItem) => (
-                    <div key={exportItem.id} className="rounded-lg border border-border/60 bg-muted/25 p-4">
+                    <div key={exportItem.id} className="rounded-lg bg-muted/50 p-4">
                       <p className="text-sm font-semibold text-foreground">{exportItem.label}</p>
                       <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                         {exportItem.description}
