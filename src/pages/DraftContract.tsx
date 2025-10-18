@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import {
   Download,
@@ -121,6 +121,35 @@ export default function DraftContract() {
     () => riskProfiles.find((profile) => profile.value === formData.riskProfile),
     [formData.riskProfile],
   );
+
+  // Load first prebuilt draft on mount
+  useEffect(() => {
+    if (prebuiltDrafts.length > 0 && !generatedContract) {
+      const firstTemplate = prebuiltDrafts[0];
+      setFormData((prev) => ({
+        ...prev,
+        ...firstTemplate.formDefaults,
+      }));
+
+      // Convert plain text contract to HTML
+      const htmlContract = firstTemplate.contract
+        .split('\n\n')
+        .map(paragraph => {
+          const trimmed = paragraph.trim();
+          if (!trimmed) return '';
+
+          // Check if it's a title (all caps or starts with number)
+          if (trimmed === trimmed.toUpperCase() && trimmed.length < 100) {
+            return `<h2>${trimmed}</h2>`;
+          }
+
+          return `<p>${trimmed}</p>`;
+        })
+        .join('');
+
+      setGeneratedContract(htmlContract);
+    }
+  }, []); // Empty dependency array = run once on mount
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
